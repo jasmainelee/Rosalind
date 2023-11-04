@@ -1,0 +1,99 @@
+##Counting DNA Nucleotides
+#-o outputs the result into a new line
+#wc -l to count number of lines
+grep -o "A" [file] | wc -l
+
+##Transcribing DNA into RNA
+#change T to U
+#-i updates the file
+#s = subsitute command
+#g = global (find all and replace all)
+sed -i 's/T/U/g' [file]
+sed -i 's/old-text/new-text/g' [file]
+
+##Complementing a Strand of DNA
+#tr command = translate
+#tr doesn't take input files - have to be echo/cat
+echo ACCTTGAA | tr ACGT TGCA | rev
+echo input | tr original change | rev
+
+##Rabbits and Recurrence Relations
+#n = number of generations
+#k = number of offsprings
+#runs like a loop n times, starts at n, goes back n-1 until base case (0/1)
+def rabbits(n, k):
+    if n == 0:
+        return 0
+    if n == 1:
+        return 1
+    else:
+        return rabbits(n-1, k) + k*rabbits(n-2, k)
+print (rabbits(5,3))
+
+##Computing GC Content
+#find sequence with highest GC content in fasta file
+library(Biostrings)
+dna <- readDNAStringSet("fastafile")
+dna
+gc_content <- letterFrequency(dna, "GC", as.prob = TRUE)
+gc_content
+
+##Counting Point Mutations
+sequence1 = "GAGCCTACTAACGGGAT"
+sequence2 = "CATCGTAATGACGGCCT"
+count = 0
+
+for i in range(len(sequence1)):
+    if sequence1[i] != sequence2[i]:
+        count += 1
+
+print("The number of point mutations is:", count)
+
+##Introduction to Mendelian Inheritance
+#k = homozygous dominant, m = heterozygous, n = homozygous recessive
+def mendel(k, m, n):
+    total = k+m+n #total population
+    both_recessive = (n/total)*((n-1)/(total-1)) #prob choosing 2 recessive parents
+    both_het = (m/total)*((m-1)/(total-1)) #prob choosing 2 het parents
+    het_recessive = (n/total)*(m/(total-1)) + (m/total)*(n/(total-1)) #prob choosing 1 recessive and 1 het parent
+
+    recessive_prob = both_recessive + both_het*0.25 + het_recessive*0.5 #prob for recessive phenotype in offspring
+    print(1-recessive_prob) #probability of offspring with dominant phenotype 
+
+mendel(2,2,2)
+
+##Translating RNA into Protein
+#read in the files, strip() removes any new lines
+rna = open("rna_sequence_file", "r").read().strip()
+
+rna_code = open("rna_codon_file", "r").readlines()
+#turn rna_code into a python dictionary, 3 letter code = key, protein code = value
+rna_codon = {}
+for line in rna_code:
+    key, value = line.strip().split(' ')
+    rna_codon[key] = value
+
+#every 3 letters in rna range(start, end, step) add value of rna_codon to protein
+#break out of the loop if rna_codon = stop
+protein = ""
+for i in range(0, len(rna), 3):
+    if rna_codon[rna[i:i+3]] == "Stop":
+        break
+    protein += rna_codon[rna[i:i+3]]
+print(protein)
+
+##Finding a Motif in DNA
+dna = open("dna_sequence_file", "r").read().strip()
+motif = "sequence_youre_looking_for"
+
+#position+1 because python is 0-based numbering
+for position in range(len(dna)):
+    if dna[position:].startswith(motif):
+        print(position+1)
+
+##Consensus and Profile
+
+
+##Overlap Graphs
+only looking at the [0:2] and [-4:-1] element in character string
+if [0:2] of one sequence matches [-4:-1] of another sequence = overlap edge 
